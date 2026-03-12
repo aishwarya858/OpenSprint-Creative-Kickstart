@@ -1,7 +1,9 @@
 ProcrasTech: The Procrastination Calculator
 
 The Procrastination Calculator is a funny web application designed to mathematically optimize slacking off. 
+
 It answers the ultimate question for students: "Exactly how many episodes of my favorite show can I binge before I completely ruin my timeline?"
+
 Instead of fighting the exhaustion after a long day of classes, ProcrasTech leans into it by calculating the exact window of free time you have left.
 
 
