@@ -3,28 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Procrastination Calculator</title>
+    <title>Procrastination Station 🎮</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@800;900&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="p-4 md:p-8 flex flex-col items-center justify-center min-h-screen">
 
-    <div class="container">
-        <h1>How much procrastination is too much?😜</h1>
-        <p>Wanna calculate exactly how much you can slack off before the lock in? Let's go!</p>
+    <div class="fixed top-10 left-10 text-5xl floating opacity-30 select-none hidden md:block">🍕</div>
+    <div class="fixed top-40 right-10 text-5xl floating opacity-30 select-none hidden md:block" style="animation-delay: 1s;">🍿</div>
+    <div class="fixed bottom-10 left-20 text-5xl floating opacity-30 select-none hidden md:block" style="animation-delay: 1.5s;">🎮</div>
+    <div class="fixed bottom-40 right-20 text-5xl floating opacity-30 select-none hidden md:block" style="animation-delay: 0.5s;">🛌</div>
 
-        <input type="number" id="deadline" placeholder="Hours until the deadline (e.g., 48)">
-        <input type="number" id="taskTime" placeholder="Hours the task actually takes (e.g., 5)">
-    
-        <input type="text" id="showName" placeholder="What show do you wanna watch? (e.g., The Office)">
-
-        <button onclick="calculateSlacking()">Calculate My Free Time</button>
-
-        <div id="result"></div>
-    </div>
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-
-    <script src="script.js"></script>
-
+    <main class="neo-card bg-white border-[6px] border-gray-900 rounded-[36px] p-6 md:p-10 w-full max-w-xl relative z-10 overflow-hidden">
         
+        <header class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl mb-3 leading-none">Lock In? </h1>
+            <p class="text-gray-500 font-bold uppercase text-xs tracking-[0.2em]">The Ultimate Slack-Off Calculator</p>
+        </header>
+
+        <section class="mb-8">
+            <label class="flex items-center gap-2 text-sm font-black mb-3 ml-1 text-gray-800 uppercase tracking-wide">
+                <i data-lucide="timer" class="w-4 h-4 text-blue-500"></i> Hours 'til Deadline
+            </label>
+            <input type="number" id="deadline" class="neo-input w-full p-5 bg-blue-50 border-4 border-gray-900 rounded-3xl focus:outline-none font-black text-xl text-gray-800" placeholder="e.g. 24" min="0" step="0.5">
+        </section>
+
+        <nav class="flex bg-gray-100 rounded-[24px] p-2 mb-8 border-4 border-gray-900">
+            <button id="btnQuickMode" onclick="switchMode('quick')" class="flex-1 py-3 rounded-2xl font-black transition-all bg-white border-2 border-gray-900 shadow-[4px_4px_0px_0px_rgba(17,24,39,1)] text-gray-900">
+                QUICK ENTRY
+            </button>
+            <button id="btnTaskMode" onclick="switchMode('tasks')" class="flex-1 py-3 rounded-2xl font-black text-gray-400 hover:text-gray-900 transition-colors">
+                DETAILED TASKS
+            </button>
+        </nav>
+
+        <div id="quickModeSection" class="mb-8 animate-in fade-in duration-300">
+            <label class="flex items-center gap-2 text-sm font-black mb-3 ml-1 text-gray-800 uppercase tracking-wide">
+                <i data-lucide="briefcase" class="w-4 h-4 text-green-500"></i> Total Est. Work Hours
+            </label>
+            <input type="number" id="taskTime" class="neo-input w-full p-5 bg-green-50 border-4 border-gray-900 rounded-3xl focus:outline-none font-black text-xl text-gray-800" placeholder="e.g. 5" min="0" step="0.5">
+        </div>
+
+        <div id="taskModeSection" class="hidden mb-8 animate-in fade-in duration-300">
+            <label class="flex items-center gap-2 text-sm font-black mb-3 ml-1 text-gray-800 uppercase tracking-wide">
+                <i data-lucide="list-checks" class="w-4 h-4 text-green-500"></i> Break it down...
+                <span class="text-[10px] text-gray-400 normal-case tracking-normal ml-auto">(Auto-fills 'ppt' & 'assignment')</span>
+            </label>
+            <div id="taskList" class="space-y-4 mb-5 max-h-[250px] overflow-y-auto pr-2 custom-scroll">
+                </div>
+            <button onclick="addTask()" class="w-full py-4 border-4 border-dashed border-gray-300 rounded-3xl text-gray-400 font-black hover:border-gray-900 hover:text-gray-900 hover:bg-gray-50 transition-all flex items-center justify-center gap-2">
+                <i data-lucide="plus-circle" class="w-5 h-5"></i> ADD A SIDE QUEST
+            </button>
+            <div class="mt-4 flex justify-between items-center pr-2 bg-gray-100 p-4 rounded-2xl border-4 border-gray-900">
+                <span class="text-sm font-black text-gray-500 uppercase">Subtotal:</span>
+                <span id="subtotalDisplay" class="text-2xl font-black text-gray-900">0h</span>
+            </div>
+        </div>
+
+        <section class="mb-10">
+            <label class="flex items-center gap-2 text-sm font-black mb-3 ml-1 text-gray-800 uppercase tracking-wide">
+                <i data-lucide="tv" class="w-4 h-4 text-purple-500"></i> What are we binging?
+            </label>
+            <input type="text" id="showName" class="neo-input w-full p-5 bg-purple-50 border-4 border-gray-900 rounded-3xl focus:outline-none font-black text-xl text-gray-800" placeholder="e.g. The Office">
+        </section>
+
+        <button onclick="calculateSlacking()" class="neo-btn w-full bg-yellow-400 border-[6px] border-gray-900 py-6 rounded-[28px] text-2xl font-black text-gray-900 hover:bg-yellow-300 transition-all uppercase tracking-tighter mb-8">
+            CALCULATE MY VIBES 🧠
+        </button>
+
+        <div id="meterContainer" class="hidden mb-8 border-[6px] border-gray-900 rounded-full h-12 w-full bg-gray-100 relative overflow-hidden">
+            <div id="meterFill" class="h-full bg-green-400 transition-all duration-1000 ease-out" style="width: 0%"></div>
+            <div class="absolute inset-0 flex items-center justify-center text-[10px] md:text-xs font-black uppercase tracking-[0.2em] text-gray-900 mix-blend-hard-light" id="meterStatus">
+                VIBE CHECKING...
+            </div>
+        </div>
+
+        <div id="result" class="hidden border-[6px] border-gray-900 p-6 rounded-[32px] font-bold text-center leading-relaxed text-lg"></div>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <script src="script.js"></script>
+    <script>lucide.createIcons();</script>
 </body>
 </html>
